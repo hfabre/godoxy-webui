@@ -495,6 +495,14 @@ export interface FinalResponse {
   statusCode: number;
 }
 
+export interface GPUStat {
+  /** busy percent (0-100) by engine */
+  engines: Record<string, number>;
+  name: string;
+  /** celsius, if exposed by the driver */
+  temperature: number;
+}
+
 export interface HTTPHeader {
   key: string;
   value: string;
@@ -1181,6 +1189,7 @@ export interface SystemInfo {
   disks: Record<string, DiskUsageStat>;
   /** disk IO by device */
   disks_io: Record<string, DiskIOCountersStat>;
+  gpus: GPUStat[];
   memory: MemVirtualMemoryStat;
   network: NetIOCountersStat;
   /** sensor temperature by key */
@@ -1203,7 +1212,8 @@ export type SystemInfoAggregateMode =
   | "disk_usage"
   | "network_speed"
   | "network_transfer"
-  | "sensor_temperature";
+  | "sensor_temperature"
+  | "gpu_usage";
 
 /** @format int64 */
 export type TimeDuration =
@@ -2014,7 +2024,8 @@ export namespace Metrics {
         | "disk_usage"
         | "network_speed"
         | "network_transfer"
-        | "sensor_temperature";
+        | "sensor_temperature"
+        | "gpu_usage";
       /** @format duration */
       interval?: string;
       period?: "5m" | "15m" | "1h" | "1d" | "1mo";
@@ -2051,7 +2062,8 @@ export namespace Metrics {
         | "disk_usage"
         | "network_speed"
         | "network_transfer"
-        | "sensor_temperature";
+        | "sensor_temperature"
+        | "gpu_usage";
       period?: "5m" | "15m" | "1h" | "1d" | "1mo";
     };
     export type RequestBody = never;
@@ -3806,7 +3818,8 @@ export class Api<
           | "disk_usage"
           | "network_speed"
           | "network_transfer"
-          | "sensor_temperature";
+          | "sensor_temperature"
+          | "gpu_usage";
         /** @format duration */
         interval?: string;
         period?: "5m" | "15m" | "1h" | "1d" | "1mo";
@@ -3848,7 +3861,8 @@ export class Api<
           | "disk_usage"
           | "network_speed"
           | "network_transfer"
-          | "sensor_temperature";
+          | "sensor_temperature"
+          | "gpu_usage";
         period?: "5m" | "15m" | "1h" | "1d" | "1mo";
       },
       params: RequestParams = {},
